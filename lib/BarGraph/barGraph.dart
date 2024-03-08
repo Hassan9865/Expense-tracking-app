@@ -9,7 +9,7 @@ class MyBarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (weeklySammary.length < 7) {
-      return Text('Insufficient data for generating the bar graph');
+      return const Text('Insufficient data for generating the bar graph');
     }
 
     BarData myBarData = BarData(
@@ -28,9 +28,9 @@ class MyBarGraph extends StatelessWidget {
       BarChartData(
         maxY: 100,
         minY: 0,
-        gridData: FlGridData(show: false),
+        gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),
-        titlesData: FlTitlesData(
+        titlesData: const FlTitlesData(
             show: true,
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
