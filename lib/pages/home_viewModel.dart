@@ -10,15 +10,22 @@ class HomeViewModel extends BaseViewModel {
   var taskBox = Hive.box("taskBox");
   List<Map<String, dynamic>> expenseList = [];
 
-  void showModel(context, contex, int) {
+  void showModel(context, contex, int? key) async {
     expenseController.clear();
     amountController.clear();
     descriptionController.clear();
-    showDialog(
+
+    if (key != null) {
+      final item = expenseList.firstWhere((element) => element['key'] == key);
+      expenseController.text = item["Expense"];
+      amountController.text = item["Amount"];
+      descriptionController.text = item["Description"];
+    }
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Add Expense"),
+          title: Text(key == null ? "Add Expense" : "Edit Expense"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -34,6 +41,7 @@ class HomeViewModel extends BaseViewModel {
                   Expanded(
                     child: TextField(
                       controller: amountController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(hintText: "Amount"),
                     ),
                   ),
@@ -59,18 +67,22 @@ class HomeViewModel extends BaseViewModel {
                     "Amount": amountController.text,
                     "Description": descriptionController.text,
                   };
-                  addExpense(data);
+                  if (key == null) {
+                    addExpense(data);
+                  } else {
+                    updateExpense(key, data);
+                  }
                   Navigator.of(context).pop();
                 },
-                child: Text("ADD"))
+                child: Text(key == null ? "ADD" : "Edit"))
           ],
         );
       },
     );
   }
 
-  showModel2(context, int index) {
-    showDialog(
+  showModel2(context, int index) async {
+    await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -80,8 +92,11 @@ class HomeViewModel extends BaseViewModel {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: () {},
-                icon: Column(
+                onPressed: () {
+                  var currentItem = expenseList[index];
+                  showModel(context, context, currentItem["key"]);
+                },
+                icon: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.edit),
@@ -89,7 +104,7 @@ class HomeViewModel extends BaseViewModel {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 50,
               ),
               IconButton(
@@ -98,7 +113,7 @@ class HomeViewModel extends BaseViewModel {
                   deleteExpense(currentItem['key']);
                   Navigator.of(context).pop();
                 },
-                icon: Column(
+                icon: const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.delete),
@@ -145,5 +160,10 @@ class HomeViewModel extends BaseViewModel {
     await taskBox.delete(key);
     readExpense();
     notifyListeners();
+  }
+
+  updateExpense(int key, Map<String, dynamic> data) async {
+    await taskBox.put(key, data);
+    readExpense();
   }
 }
