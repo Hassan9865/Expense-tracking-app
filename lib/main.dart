@@ -1,4 +1,4 @@
-import 'package:daily_expense/pages/homeview.dart';
+import 'package:daily_expense/pages/Splash%20View/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: SplashView(),
     );
   }
 }

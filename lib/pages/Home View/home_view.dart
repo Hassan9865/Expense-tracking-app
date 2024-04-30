@@ -1,5 +1,5 @@
 import 'package:daily_expense/BarGraph/barGraph.dart';
-import 'package:daily_expense/pages/home_viewModel.dart';
+import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -21,21 +21,20 @@ class HomePage extends StatelessWidget {
       viewModelBuilder: () => HomeViewModel(),
       onViewModelReady: (viewModel) => viewModel.readExpense(),
       builder: (context, HomeViewModel viewModel, index) {
+        double totalExpense = 0.0;
+        viewModel.expenseList.forEach((item) {
+          totalExpense += double.parse(item['Amount'] ?? '0');
+        });
         return Scaffold(
           backgroundColor: Colors.grey[200],
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     viewModel.showModel(context, context, null);
-          //   },
-          //   child: const Icon(Icons.add),
-          // ),
           appBar: AppBar(
-            centerTitle: true,
-            title: Text("Expense App"),
+            title: const Text("Daily Expense"),
             actions: [
               IconButton(
-                  onPressed: () {},
-                  icon: Row(
+                  onPressed: () {
+                    viewModel.showModel(context, context, null);
+                  },
+                  icon: const Row(
                     children: [
                       Icon(
                         Icons.add,
@@ -86,7 +85,7 @@ class HomePage extends StatelessWidget {
                 Divider(),
                 ListTile(
                   title: Text("Total Expense"),
-                  trailing: Text("1234"),
+                  trailing: Text(totalExpense.toStringAsFixed(2)),
                 ),
               ],
             ),
