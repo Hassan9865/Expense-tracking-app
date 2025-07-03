@@ -25,8 +25,8 @@ class SplashView extends StatelessWidget {
             backgroundColor: Colors.grey[200],
             body: Center(
               child: Container(
-                height: 250,
-                width: 250,
+                height: MediaQuery.of(context).size.height / 2,
+                width: MediaQuery.of(context).size.width / 2,
                 child: Image.asset('assets/icon.png'),
               ),
             ));
