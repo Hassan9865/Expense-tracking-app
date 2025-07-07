@@ -3,23 +3,22 @@ import 'package:hive/hive.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
-  TextEditingController expenseController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
   TextEditingController amountController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  TextEditingController incomeController = TextEditingController();
 
   var taskBox = Hive.box("taskBox");
   List<Map<String, dynamic>> expenseList = [];
 
   void showModel(context, contex, int? key) async {
-    expenseController.clear();
+    categoryController.clear();
     amountController.clear();
-    descriptionController.clear();
 
     if (key != null) {
       final item = expenseList.firstWhere((element) => element['key'] == key);
-      expenseController.text = item["Expense"];
+      categoryController.text = item["Category"];
       amountController.text = item["Amount"];
-      descriptionController.text = item["Description"];
+      // descriptionController.text = item["Description"];
     }
     await showDialog(
       context: context,
@@ -29,27 +28,14 @@ class HomeViewModel extends BaseViewModel {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: expenseController,
-                      decoration: InputDecoration(hintText: "Title"),
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: amountController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(hintText: "Amount"),
-                    ),
-                  ),
-                ],
+              TextField(
+                controller: categoryController,
+                decoration: InputDecoration(hintText: "Category"),
               ),
               TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(hintText: "description"),
+                controller: amountController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(hintText: "Amount"),
               )
             ],
           ),
@@ -63,9 +49,8 @@ class HomeViewModel extends BaseViewModel {
             TextButton(
                 onPressed: () {
                   var data = {
-                    "Expense": expenseController.text,
+                    "Category": categoryController.text,
                     "Amount": amountController.text,
-                    "Description": descriptionController.text,
                   };
                   if (key == null) {
                     addExpense(data);
@@ -136,6 +121,38 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
+  showIncomeModel(
+    context,
+  ) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Add Income"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: incomeController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(hintText: "Amount"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(onPressed: () {}, child: Text("Add"))
+          ],
+        );
+      },
+    );
+  }
+
   addExpense(Map<String, dynamic> data) async {
     await taskBox.add(data);
     readExpense();
@@ -146,9 +163,9 @@ class HomeViewModel extends BaseViewModel {
       final item = taskBox.get(key);
       return {
         'key': key,
-        'Expense': item['Expense'],
+        'Category': item['Category'],
         'Amount': item['Amount'],
-        'Description': item['Description']
+        // 'Description': item['Description']
       };
     }).toList();
 

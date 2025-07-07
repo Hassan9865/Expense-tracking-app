@@ -93,7 +93,7 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
             right: 15,
             child: IconButton(
                 onPressed: () {
-                  viewModel.showModel(context, context, null);
+                  viewModel.showIncomeModel(context);
                 },
                 icon: const Row(
                   children: [
