@@ -1,92 +1,272 @@
-// import 'package:daily_expense/pages/Home%20View/widget/BarGraph/barGraph.dart';
+// import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
+// import 'package:daily_expense/pages/Home%20View/widget/expense_tracker.dart';
+// import 'package:flutter/material.dart';
+// import 'package:stacked/stacked.dart';
+
+// class HomePage extends StatelessWidget {
+//   const HomePage({Key? key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // final List<double> weeklySammary = [
+//     //   61.23,
+//     //   42.21,
+//     //   25.12,
+//     //   77.13,
+//     //   26.13,
+//     //   19.41,
+//     //   41.34
+//     // ];
+
+//     return ViewModelBuilder.reactive(
+//       viewModelBuilder: () => HomeViewModel(),
+//       onViewModelReady: (viewModel) => viewModel.readExpense(),
+//       builder: (context, HomeViewModel viewModel, index) {
+//         return Scaffold(
+//           backgroundColor: Colors.grey[200],
+//           appBar: AppBar(
+//             title: const Text("Daily Expense"),
+//             actions: [
+//               IconButton(
+//                   onPressed: () {
+//                     viewModel.showModel(context, context, null);
+//                   },
+//                   icon: const Row(
+//                     children: [
+//                       Icon(
+//                         Icons.add,
+//                       ),
+//                       Text("Add Expense"),
+//                     ],
+//                   ))
+//             ],
+//           ),
+//           body: SafeArea(
+//             child: Column(
+//               children: [
+//                 const ExpenseTracker(),
+//                 const SizedBox(
+//                   height: 20,
+//                 ),
+//                 Expanded(
+//                   child: ListView.builder(
+//                     itemCount: viewModel.expenseList.length,
+//                     itemBuilder: (context, index) {
+//                       var currentItem = viewModel.expenseList[index];
+//                       return Padding(
+//                         padding: const EdgeInsets.only(
+//                             bottom: 10, left: 8, right: 8),
+//                         child: Container(
+//                           decoration: BoxDecoration(
+//                             color: Colors.grey[100],
+//                             borderRadius: BorderRadius.circular(10),
+//                           ),
+//                           child: GestureDetector(
+//                             onTap: () => viewModel.showModel2(context, index),
+//                             child: ListTile(
+//                               title: Text(currentItem['Category'] ?? ""),
+//                               trailing: Text(currentItem['Amount'] ?? ""),
+//                             ),
+//                           ),
+//                         ),
+//                       );
+//                     },
+//                   ),
+//                 ),
+//                 Divider(),
+//                 ListTile(
+//                   title: Text("Total Expense"),
+//                   trailing: Text(
+//                     viewModel.getTotalExpense().toString(),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
 import 'package:daily_expense/pages/Home%20View/widget/expense_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final List<double> weeklySammary = [
-    //   61.23,
-    //   42.21,
-    //   25.12,
-    //   77.13,
-    //   26.13,
-    //   19.41,
-    //   41.34
-    // ];
-
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => HomeViewModel(),
       onViewModelReady: (viewModel) => viewModel.readExpense(),
       builder: (context, HomeViewModel viewModel, index) {
         return Scaffold(
-          backgroundColor: Colors.grey[200],
+          backgroundColor: Colors.grey[50],
           appBar: AppBar(
-            title: const Text("Daily Expense"),
+            title: const Text(
+              "Daily Expense",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            elevation: 0,
             actions: [
-              IconButton(
-                  onPressed: () {
-                    viewModel.showModel(context, context, null);
-                  },
-                  icon: const Row(
-                    children: [
-                      Icon(
-                        Icons.add,
-                      ),
-                      Text("Add Expense"),
-                    ],
-                  ))
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: ElevatedButton.icon(
+                  onPressed: () => viewModel.showModel(context, context, null),
+                  icon: const Icon(Icons.add, size: 20),
+                  label: const Text("Add Expense"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple[600],
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 2,
+                  ),
+                ),
+              ),
             ],
           ),
           body: SafeArea(
             child: Column(
               children: [
-                // SizedBox(
-                //   height: 200,
-                //   child: MyBarGraph(
-                //     weeklySammary: weeklySammary,
-                //   ),
-                // ),
+                // Stats Card
+                const ExpenseTracker(),
 
-                ExpenseTracker(),
-                const SizedBox(
-                  height: 20,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: viewModel.expenseList.length,
-                    itemBuilder: (context, index) {
-                      var currentItem = viewModel.expenseList[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 10, left: 8, right: 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: GestureDetector(
-                            onTap: () => viewModel.showModel2(context, index),
-                            child: ListTile(
-                              title: Text(currentItem['Category'] ?? ""),
-                              trailing: Text(currentItem['Amount'] ?? ""),
-                            ),
-                          ),
+                // Recent Transactions Header
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Recent Transactions",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[800],
                         ),
-                      );
-                    },
+                      ),
+                      Text(
+                        DateFormat('MMM dd, yyyy').format(DateTime.now()),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Divider(),
-                ListTile(
-                  title: Text("Total Expense"),
-                  trailing: Text(
-                    viewModel.getTotalExpense().toString(),
+
+                // Transactions List
+                Expanded(
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: viewModel.expenseList.length,
+                        itemBuilder: (context, index) {
+                          var currentItem = viewModel.expenseList[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom:
+                                    index != viewModel.expenseList.length - 1
+                                        ? BorderSide(
+                                            color: Colors.grey[200]!, width: 1)
+                                        : BorderSide.none,
+                              ),
+                            ),
+                            child: ListTile(
+                              onTap: () => viewModel.showModel2(context, index),
+                              leading: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color:
+                                      _getCategoryColor(currentItem['Category'])
+                                          .withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  _getCategoryIcon(currentItem['Category']),
+                                  color: _getCategoryColor(
+                                      currentItem['Category']),
+                                ),
+                              ),
+                              title: Text(
+                                currentItem['Category'] ?? "",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              subtitle: Text(
+                                DateFormat('hh:mm a').format(DateTime.parse(
+                                    currentItem['Date'] ??
+                                        DateTime.now().toString())),
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                              trailing: Text(
+                                "Rs. ${currentItem['Amount'] ?? ""}",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red[600],
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Total Expense Card
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total Expense",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          Text(
+                            "Rs. ${viewModel.getTotalExpense().toString()}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.purple[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -95,5 +275,41 @@ class HomePage extends StatelessWidget {
         );
       },
     );
+  }
+
+  // Helper function to get category color
+  Color _getCategoryColor(String? category) {
+    switch (category?.toLowerCase()) {
+      case 'food':
+        return Colors.orange;
+      case 'transport':
+        return Colors.blue;
+      case 'shopping':
+        return Colors.pink;
+      case 'entertainment':
+        return Colors.green;
+      case 'bills':
+        return Colors.red;
+      default:
+        return Colors.purple;
+    }
+  }
+
+  // Helper function to get category icon
+  IconData _getCategoryIcon(String? category) {
+    switch (category?.toLowerCase()) {
+      case 'food':
+        return Icons.restaurant;
+      case 'transport':
+        return Icons.directions_car;
+      case 'shopping':
+        return Icons.shopping_bag;
+      case 'entertainment':
+        return Icons.movie;
+      case 'bills':
+        return Icons.receipt;
+      default:
+        return Icons.money;
+    }
   }
 }
