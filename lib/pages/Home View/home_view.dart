@@ -153,12 +153,6 @@ class HomePage extends StatelessWidget {
                           color: Colors.grey[800],
                         ),
                       ),
-                      Text(
-                        DateFormat('MMM dd, yyyy').format(DateTime.now()),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
-                      ),
                     ],
                   ),
                 ),
