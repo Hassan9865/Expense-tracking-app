@@ -24,10 +24,6 @@ class HomePage extends StatelessWidget {
       viewModelBuilder: () => HomeViewModel(),
       onViewModelReady: (viewModel) => viewModel.readExpense(),
       builder: (context, HomeViewModel viewModel, index) {
-        double totalExpense = 0.0;
-        viewModel.expenseList.forEach((item) {
-          totalExpense += double.parse(item['Amount'] ?? '0');
-        });
         return Scaffold(
           backgroundColor: Colors.grey[200],
           appBar: AppBar(
@@ -89,7 +85,9 @@ class HomePage extends StatelessWidget {
                 Divider(),
                 ListTile(
                   title: Text("Total Expense"),
-                  trailing: Text(totalExpense.toStringAsFixed(2)),
+                  trailing: Text(
+                    viewModel.getTotalExpense().toString(),
+                  ),
                 ),
               ],
             ),

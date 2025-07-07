@@ -10,6 +10,17 @@ class HomeViewModel extends BaseViewModel {
   var taskBox = Hive.box("taskBox");
   List<Map<String, dynamic>> expenseList = [];
 
+  var incomeBox = Hive.box("incomeBox");
+
+  double getTotalExpense() {
+    double total = 0;
+    for (var item in expenseList) {
+      final amount = double.tryParse(item['Amount'] ?? '0') ?? 0;
+      total += amount;
+    }
+    return total;
+  }
+
   void showModel(context, contex, int? key) async {
     categoryController.clear();
     amountController.clear();
@@ -147,7 +158,13 @@ class HomeViewModel extends BaseViewModel {
               },
               child: const Text("Cancel"),
             ),
-            TextButton(onPressed: () {}, child: Text("Add"))
+            TextButton(
+                onPressed: () {
+                  var amount = incomeController.text;
+                  setIncome(amount);
+                  Navigator.pop(context);
+                },
+                child: Text("Add"))
           ],
         );
       },
@@ -183,5 +200,20 @@ class HomeViewModel extends BaseViewModel {
   updateExpense(int key, Map<String, dynamic> data) async {
     await taskBox.put(key, data);
     readExpense();
+  }
+
+  Future<void> setIncome(String amount) async {
+    await incomeBox.put('userIncome', amount);
+    notifyListeners();
+  }
+
+  String getIncome() {
+    return incomeBox.get('userIncome', defaultValue: 0);
+  }
+
+  double getSaving() {
+    double income = double.tryParse(getIncome()) ?? 0;
+    double totalExpense = getTotalExpense();
+    return income - totalExpense;
   }
 }

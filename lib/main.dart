@@ -6,6 +6,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox("taskBox");
+  await Hive.openBox("incomeBox");
   runApp(const MyApp());
 }
 

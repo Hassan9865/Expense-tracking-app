@@ -10,7 +10,7 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
   @override
   Widget build(BuildContext context, HomeViewModel viewModel) {
     final DateTime today = DateTime.now();
-
+    // var currentItem = viewModel.expenseList;
     return Container(
       height: MediaQuery.of(context).size.height * 0.25,
       width: MediaQuery.of(context).size.width * 0.9,
@@ -69,7 +69,7 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
                 _buildAmountRow(
                   context,
                   label: 'Income',
-                  amount: '54,000',
+                  amount: viewModel.getIncome().toString(),
                   icon: Icons.arrow_upward,
                   iconColor: Colors.green.shade300,
                 ),
@@ -78,7 +78,7 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
                 _buildAmountRow(
                   context,
                   label: 'Saving',
-                  amount: '5,000',
+                  amount: viewModel.getSaving().toString(),
                   icon: Icons.savings,
                   iconColor: Colors.amber.shade300,
                 ),
