@@ -1,5 +1,7 @@
-import 'package:daily_expense/BarGraph/barGraph.dart';
+// import 'package:daily_expense/pages/Home%20View/widget/BarGraph/barGraph.dart';
+
 import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
+import 'package:daily_expense/pages/Home%20View/widget/expense_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -8,15 +10,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<double> weeklySammary = [
-      61.23,
-      42.21,
-      25.12,
-      77.13,
-      26.13,
-      19.41,
-      41.34
-    ];
+    // final List<double> weeklySammary = [
+    //   61.23,
+    //   42.21,
+    //   25.12,
+    //   77.13,
+    //   26.13,
+    //   19.41,
+    //   41.34
+    // ];
+
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => HomeViewModel(),
       onViewModelReady: (viewModel) => viewModel.readExpense(),
@@ -47,12 +50,14 @@ class HomePage extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
-                SizedBox(
-                  height: 200,
-                  child: MyBarGraph(
-                    weeklySammary: weeklySammary,
-                  ),
-                ),
+                // SizedBox(
+                //   height: 200,
+                //   child: MyBarGraph(
+                //     weeklySammary: weeklySammary,
+                //   ),
+                // ),
+
+                ExpenseTracker(),
                 const SizedBox(
                   height: 20,
                 ),
