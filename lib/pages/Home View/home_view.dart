@@ -77,8 +77,7 @@ class HomePage extends StatelessWidget {
                           child: GestureDetector(
                             onTap: () => viewModel.showModel2(context, index),
                             child: ListTile(
-                              title: Text(currentItem['Expense'] ?? ""),
-                              subtitle: Text(currentItem['Description'] ?? ""),
+                              title: Text(currentItem['Category'] ?? ""),
                               trailing: Text(currentItem['Amount'] ?? ""),
                             ),
                           ),

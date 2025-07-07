@@ -78,6 +78,7 @@ class HomeViewModel extends BaseViewModel {
             children: [
               IconButton(
                 onPressed: () {
+                  Navigator.pop(context);
                   var currentItem = expenseList[index];
                   showModel(context, context, currentItem["key"]);
                 },
