@@ -1,99 +1,8 @@
-// import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
-// import 'package:daily_expense/pages/Home%20View/widget/expense_tracker.dart';
-// import 'package:flutter/material.dart';
-// import 'package:stacked/stacked.dart';
-
-// class HomePage extends StatelessWidget {
-//   const HomePage({Key? key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // final List<double> weeklySammary = [
-//     //   61.23,
-//     //   42.21,
-//     //   25.12,
-//     //   77.13,
-//     //   26.13,
-//     //   19.41,
-//     //   41.34
-//     // ];
-
-//     return ViewModelBuilder.reactive(
-//       viewModelBuilder: () => HomeViewModel(),
-//       onViewModelReady: (viewModel) => viewModel.readExpense(),
-//       builder: (context, HomeViewModel viewModel, index) {
-//         return Scaffold(
-//           backgroundColor: Colors.grey[200],
-//           appBar: AppBar(
-//             title: const Text("Daily Expense"),
-//             actions: [
-//               IconButton(
-//                   onPressed: () {
-//                     viewModel.showModel(context, context, null);
-//                   },
-//                   icon: const Row(
-//                     children: [
-//                       Icon(
-//                         Icons.add,
-//                       ),
-//                       Text("Add Expense"),
-//                     ],
-//                   ))
-//             ],
-//           ),
-//           body: SafeArea(
-//             child: Column(
-//               children: [
-//                 const ExpenseTracker(),
-//                 const SizedBox(
-//                   height: 20,
-//                 ),
-//                 Expanded(
-//                   child: ListView.builder(
-//                     itemCount: viewModel.expenseList.length,
-//                     itemBuilder: (context, index) {
-//                       var currentItem = viewModel.expenseList[index];
-//                       return Padding(
-//                         padding: const EdgeInsets.only(
-//                             bottom: 10, left: 8, right: 8),
-//                         child: Container(
-//                           decoration: BoxDecoration(
-//                             color: Colors.grey[100],
-//                             borderRadius: BorderRadius.circular(10),
-//                           ),
-//                           child: GestureDetector(
-//                             onTap: () => viewModel.showModel2(context, index),
-//                             child: ListTile(
-//                               title: Text(currentItem['Category'] ?? ""),
-//                               trailing: Text(currentItem['Amount'] ?? ""),
-//                             ),
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ),
-//                 Divider(),
-//                 ListTile(
-//                   title: Text("Total Expense"),
-//                   trailing: Text(
-//                     viewModel.getTotalExpense().toString(),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
-
 import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
 import 'package:daily_expense/pages/Home%20View/widget/expense_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -205,14 +114,14 @@ class HomePage extends StatelessWidget {
                                   color: Colors.grey[800],
                                 ),
                               ),
-                              subtitle: Text(
-                                DateFormat('hh:mm a').format(DateTime.parse(
-                                    currentItem['Date'] ??
-                                        DateTime.now().toString())),
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                ),
-                              ),
+                              // subtitle: Text(
+                              //   DateFormat('hh:mm a').format(DateTime.parse(
+                              //       currentItem['Date'] ??
+                              //           DateTime.now().toString())),
+                              //   style: TextStyle(
+                              //     color: Colors.grey[500],
+                              //   ),
+                              // ),
                               trailing: Text(
                                 "Rs. ${currentItem['Amount'] ?? ""}",
                                 style: TextStyle(

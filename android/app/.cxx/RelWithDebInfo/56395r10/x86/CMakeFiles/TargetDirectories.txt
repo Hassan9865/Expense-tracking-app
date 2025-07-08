@@ -1,0 +1,2 @@
+D:/Projects/Personal projects/Stacked projects/daily_expense/android/app/.cxx/RelWithDebInfo/56395r10/x86/CMakeFiles/edit_cache.dir
+D:/Projects/Personal projects/Stacked projects/daily_expense/android/app/.cxx/RelWithDebInfo/56395r10/x86/CMakeFiles/rebuild_cache.dir

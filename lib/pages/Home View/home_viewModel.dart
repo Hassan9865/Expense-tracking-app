@@ -181,8 +181,8 @@ class HomeViewModel extends BaseViewModel {
       final item = taskBox.get(key);
       return {
         'key': key,
-        'Category': item['Category'],
-        'Amount': item['Amount'],
+        'Category': item['Category'] ?? 'unknown',
+        'Amount': item['Amount'] ?? 0,
         // 'Description': item['Description']
       };
     }).toList();
@@ -208,7 +208,7 @@ class HomeViewModel extends BaseViewModel {
   }
 
   String getIncome() {
-    return incomeBox.get('userIncome', defaultValue: 0);
+    return incomeBox.get('userIncome', defaultValue: 0).toString();
   }
 
   double getSaving() {

@@ -1,0 +1,2 @@
+D:/Projects/Personal projects/Stacked projects/daily_expense/android/app/.cxx/RelWithDebInfo/56395r10/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/Projects/Personal projects/Stacked projects/daily_expense/android/app/.cxx/RelWithDebInfo/56395r10/armeabi-v7a/CMakeFiles/rebuild_cache.dir
