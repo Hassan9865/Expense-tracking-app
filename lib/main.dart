@@ -1,10 +1,12 @@
-import 'package:daily_expense/pages/Home%20View/home_view.dart';
+import 'package:daily_expense/app/app.locator.dart';
+import 'package:daily_expense/app/app.router.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await setupLocator();
+  await setupLocator();
   await Hive.initFlutter();
   await Hive.openBox("expenseBox");
   await Hive.openBox("incomeBox");
@@ -18,11 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // navigatorKey: StackedService.navigatorKey,
-      // onGenerateRoute: StackedRouter().onGenerateRoute,
-      home: HomePage(),
+      navigatorKey: StackedService.navigatorKey,
+      onGenerateRoute: StackedRouter().onGenerateRoute,
     );
   }
 }
