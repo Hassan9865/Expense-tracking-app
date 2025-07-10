@@ -1,16 +1,84 @@
+import 'package:daily_expense/app/app.router.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
+  final NavigationService navigationService = NavigationService();
   TextEditingController categoryController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController incomeController = TextEditingController();
 
-  var taskBox = Hive.box("taskBox");
+  navigateToMonthlyExpenseView() {
+    navigationService.navigateToMonthlyExpenseView();
+  }
+
+  var expenseBox = Hive.box("expenseBox");
   List<Map<String, dynamic>> expenseList = [];
 
   var incomeBox = Hive.box("incomeBox");
+  var monthlyBox = Hive.box("monthlyBox");
+  var metaBox = Hive.box("metaBox");
+
+  String getCurrentMonthKey() {
+    final now = DateTime.now();
+    return '${now.month.toString().padLeft(2, '0')}-${now.year}';
+  }
+
+  void checkAndResetIfNewMonth() {
+    String currentMonthKey = getCurrentMonthKey();
+    String? lastSavedMonth = metaBox.get('lastSavedMonth');
+
+    // If first time or new month detected
+    if (lastSavedMonth != currentMonthKey) {
+      // Save old month’s summary
+      saveMonthlySummary(lastSavedMonth ?? currentMonthKey);
+
+      // Clear taskBox (expenses)
+      expenseBox.clear();
+
+      // Set new income = previous savings
+      double saving = getSaving();
+      setIncome(saving.toString());
+
+      // Save current as last saved
+      metaBox.put('lastSavedMonth', currentMonthKey);
+    }
+  }
+
+  void saveMonthlySummary(String monthKey) {
+    final income = double.tryParse(getIncome()) ?? 0;
+    final expenses = expenseBox.values.toList();
+    double totalExpense = 0;
+    List<Map<String, dynamic>> expenseList = [];
+
+    for (var item in expenses) {
+      double amount = double.tryParse(item['Amount'] ?? '0') ?? 0;
+      totalExpense += amount;
+      expenseList.add({
+        'Category': item['Category'] ?? 'unknown',
+        'Amount': amount,
+      });
+    }
+
+    double saving = income - totalExpense;
+
+    monthlyBox.put(monthKey, {
+      'income': income,
+      'totalExpense': totalExpense,
+      'savings': saving,
+      'expenses': expenseList,
+    });
+  }
+
+  List<String> getAllMonths() {
+    return monthlyBox.keys.cast<String>().toList();
+  }
+
+  Map<String, dynamic> getMonthData(String key) {
+    return monthlyBox.get(key);
+  }
 
   double getTotalExpense() {
     double total = 0;
@@ -172,13 +240,13 @@ class HomeViewModel extends BaseViewModel {
   }
 
   addExpense(Map<String, dynamic> data) async {
-    await taskBox.add(data);
+    await expenseBox.add(data);
     readExpense();
   }
 
   readExpense() {
-    var data = taskBox.keys.map((key) {
-      final item = taskBox.get(key);
+    var data = expenseBox.keys.map((key) {
+      final item = expenseBox.get(key);
       return {
         'key': key,
         'Category': item['Category'] ?? 'unknown',
@@ -192,13 +260,13 @@ class HomeViewModel extends BaseViewModel {
   }
 
   deleteExpense(int? key) async {
-    await taskBox.delete(key);
+    await expenseBox.delete(key);
     readExpense();
     notifyListeners();
   }
 
   updateExpense(int key, Map<String, dynamic> data) async {
-    await taskBox.put(key, data);
+    await expenseBox.put(key, data);
     readExpense();
   }
 

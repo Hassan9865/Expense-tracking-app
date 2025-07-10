@@ -23,6 +23,11 @@ class HomePage extends StatelessWidget {
             centerTitle: true,
             elevation: 0,
             actions: [
+              IconButton(
+                  onPressed: () {
+                    viewModel.navigateToMonthlyExpenseView();
+                  },
+                  icon: Icon(Icons.abc)),
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: ElevatedButton.icon(
