@@ -1,5 +1,5 @@
 import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
-import 'package:daily_expense/pages/Home%20View/widget/incomemodel.dart';
+import 'package:daily_expense/pages/Home%20View/widget/incomeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:stacked/stacked.dart';

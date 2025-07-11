@@ -1,4 +1,6 @@
 import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
+import 'package:daily_expense/pages/Home%20View/widget/ed_expense.dart';
+import 'package:daily_expense/pages/Home%20View/widget/expense_dialog.dart';
 import 'package:daily_expense/pages/Home%20View/widget/expense_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -31,7 +33,11 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: ElevatedButton.icon(
-                  onPressed: () => viewModel.showModel(context, context, null),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) =>
+                        ExpenseDialog(viewModel: viewModel, expensekey: null),
+                  ),
                   icon: const Icon(Icons.add, size: 20),
                   label: const Text("Add Expense"),
                   style: ElevatedButton.styleFrom(
@@ -97,7 +103,12 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             child: ListTile(
-                              onTap: () => viewModel.showModel2(context, index),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => EdExpense(
+                                    viewModel: viewModel, index: index),
+                              ),
+                              //  viewModel.showModel2(context, index),
                               leading: Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
