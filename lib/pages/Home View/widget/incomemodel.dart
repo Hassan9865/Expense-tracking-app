@@ -3,16 +3,23 @@ import 'package:flutter/material.dart';
 
 class IncomeDialog extends StatelessWidget {
   final HomeViewModel viewModel;
+  final bool isEdit;
 
   const IncomeDialog({
     required this.viewModel,
     super.key,
+    required this.isEdit,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (isEdit) {
+      viewModel.incomeController.text = viewModel.getIncome().toString();
+    } else {
+      viewModel.incomeController.clear();
+    }
     return AlertDialog(
-      title: const Text("Add Income"),
+      title: Text(isEdit ? "Edit Icome" : "Add Income"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -34,12 +41,17 @@ class IncomeDialog extends StatelessWidget {
             // viewModel.editIncome(amount);
 
             if (amount.isNotEmpty) {
-              await viewModel.addIncome(amount);
+              if (isEdit) {
+                await viewModel.editIncome(amount);
+              } else {
+                await viewModel.addIncome(amount);
+              }
               viewModel.incomeController.clear();
+
               Navigator.pop(context);
             }
           },
-          child: const Text("Add"),
+          child: Text(isEdit ? "Edit" : "Add"),
         ),
       ],
     );

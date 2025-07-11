@@ -67,16 +67,18 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
                 ),
 
                 // Income Row
-                _buildAmountRow(
-                  context,
-                  label: 'Income',
-                  amount: viewModel.getIncome().toString(),
-                  icon: Icons.arrow_upward,
-                  iconColor: Colors.green.shade300,
-                  icon2: Icons.edit,
-                  showIcon: true,
-                  // onTap: () => ,
-                ),
+                _buildAmountRow(context,
+                    label: 'Income',
+                    amount: viewModel.getIncome().toString(),
+                    icon: Icons.arrow_upward,
+                    iconColor: Colors.green.shade300,
+                    icon2: Icons.edit,
+                    showIcon: true,
+                    onTap: () => showDialog(
+                          context: context,
+                          builder: (context) =>
+                              IncomeDialog(viewModel: viewModel, isEdit: true),
+                        )),
 
                 // Saving Row
                 _buildAmountRow(
@@ -101,6 +103,7 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
                       context: context,
                       builder: (context) => IncomeDialog(
                             viewModel: viewModel,
+                            isEdit: false,
                           ));
                 },
                 icon: const Row(
@@ -154,7 +157,7 @@ Widget _buildAmountRow(
         ),
         GestureDetector(
           onTap: () {
-            onTap;
+            if (onTap != null) onTap();
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
