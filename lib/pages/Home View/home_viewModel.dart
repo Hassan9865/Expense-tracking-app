@@ -40,7 +40,7 @@ class HomeViewModel extends BaseViewModel {
 
       // Set new income = previous savings
       double saving = getSaving();
-      setIncome(saving.toString());
+      editIncome(saving.toString());
 
       // Save current as last saved
       metaBox.put('lastSavedMonth', currentMonthKey);
@@ -201,44 +201,6 @@ class HomeViewModel extends BaseViewModel {
     );
   }
 
-  showIncomeModel(
-    context,
-  ) async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Add Income"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: incomeController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(hintText: "Amount"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-                onPressed: () {
-                  var amount = incomeController.text;
-                  setIncome(amount);
-                  Navigator.pop(context);
-                },
-                child: Text("Add"))
-          ],
-        );
-      },
-    );
-  }
-
   addExpense(Map<String, dynamic> data) async {
     await expenseBox.add(data);
     readExpense();
@@ -270,7 +232,7 @@ class HomeViewModel extends BaseViewModel {
     readExpense();
   }
 
-  Future<void> setIncome(String amount) async {
+  Future<void> editIncome(String amount) async {
     await incomeBox.put('userIncome', amount);
     notifyListeners();
   }
