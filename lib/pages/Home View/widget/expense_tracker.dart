@@ -73,6 +73,9 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
                   amount: viewModel.getIncome().toString(),
                   icon: Icons.arrow_upward,
                   iconColor: Colors.green.shade300,
+                  icon2: Icons.edit,
+                  showIcon: true,
+                  // onTap: () => ,
                 ),
 
                 // Saving Row
@@ -120,8 +123,11 @@ Widget _buildAmountRow(
   BuildContext context, {
   required String label,
   required String amount,
-  required IconData icon,
-  required Color iconColor,
+  IconData? icon,
+  IconData? icon2,
+  Color? iconColor,
+  VoidCallback? onTap,
+  bool showIcon = false,
 }) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 6.0),
@@ -146,12 +152,29 @@ Widget _buildAmountRow(
             ),
           ],
         ),
-        Text(
-          'Rs. $amount',
-          style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width < 600 ? 18 : 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+        GestureDetector(
+          onTap: () {
+            onTap;
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (showIcon)
+                Icon(
+                  icon2,
+                  color: iconColor,
+                  size: MediaQuery.of(context).size.width < 600 ? 20 : 24,
+                ),
+              SizedBox(width: 10),
+              Text(
+                'Rs. $amount',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width < 600 ? 18 : 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ],
