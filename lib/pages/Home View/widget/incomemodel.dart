@@ -29,10 +29,15 @@ class IncomeDialog extends StatelessWidget {
           child: const Text("Cancel"),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async {
             final amount = viewModel.incomeController.text;
-            viewModel.editIncome(amount);
-            Navigator.pop(context);
+            // viewModel.editIncome(amount);
+
+            if (amount.isNotEmpty) {
+              await viewModel.addIncome(amount);
+              viewModel.incomeController.clear();
+              Navigator.pop(context);
+            }
           },
           child: const Text("Add"),
         ),

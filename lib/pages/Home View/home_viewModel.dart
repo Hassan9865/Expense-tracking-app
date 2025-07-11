@@ -233,8 +233,24 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<void> editIncome(String amount) async {
-    await incomeBox.put('userIncome', amount);
+    final value = double.tryParse(amount) ?? 0.0;
+    await incomeBox.put('userIncome', value);
     notifyListeners();
+  }
+
+  Future<void> addIncome(String amount) async {
+    try {
+      final newIncome = double.tryParse(amount) ?? 00;
+      final previousIncome = double.tryParse(
+              incomeBox.get('userIncome', defaultValue: 0).toString()) ??
+          0.0;
+      final totalIncome = previousIncome + newIncome;
+
+      await incomeBox.put('userIncome', totalIncome);
+      notifyListeners();
+    } catch (e) {
+      print('Error adding income: $e');
+    }
   }
 
   String getIncome() {
