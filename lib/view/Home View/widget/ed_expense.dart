@@ -1,5 +1,5 @@
-import 'package:daily_expense/pages/Home%20View/widget/expense_dialog.dart';
-import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
+import 'package:daily_expense/view/Home%20View/widget/expense_dialog.dart';
+import 'package:daily_expense/view/Home%20View/home_viewModel.dart';
 import 'package:flutter/material.dart';
 
 class EdExpense extends StatelessWidget {
@@ -18,7 +18,7 @@ class EdExpense extends StatelessWidget {
           IconButton(
             onPressed: () async {
               Navigator.pop(context);
-              var currentItem = viewModel.expenseList[index];
+              var currentItem = viewModel.expenseList()[index];
               await showDialog(
                 context: context,
                 builder: (context) => ExpenseDialog(
@@ -41,7 +41,7 @@ class EdExpense extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              var currentItem = viewModel.expenseList[index];
+              var currentItem = viewModel.expenseList()[index];
               viewModel.deleteExpense(currentItem['key']);
               Navigator.of(context).pop();
             },

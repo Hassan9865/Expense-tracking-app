@@ -1,4 +1,4 @@
-import 'package:daily_expense/pages/Home%20View/widget/BarGraph/individual_bar.dart';
+import 'package:daily_expense/view/Home%20View/widget/BarGraph/individual_bar.dart';
 
 class BarData {
   final double sunAmount;

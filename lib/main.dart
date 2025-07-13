@@ -1,5 +1,6 @@
 import 'package:daily_expense/app/app.locator.dart';
 import 'package:daily_expense/app/app.router.dart';
+import 'package:daily_expense/services/expense_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,6 +13,7 @@ void main() async {
   await Hive.openBox("incomeBox");
   await Hive.openBox("monthlyBox");
   await Hive.openBox("metaBox");
+  await locator<ExpenseService>().init();
   runApp(const MyApp());
 }
 

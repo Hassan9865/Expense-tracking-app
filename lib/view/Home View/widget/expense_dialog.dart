@@ -1,4 +1,6 @@
-import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
+import 'package:daily_expense/app/app.locator.dart';
+import 'package:daily_expense/services/expense_service.dart';
+import 'package:daily_expense/view/Home%20View/home_viewModel.dart';
 import 'package:flutter/material.dart';
 
 class ExpenseDialog extends StatelessWidget {
@@ -12,7 +14,8 @@ class ExpenseDialog extends StatelessWidget {
     viewModel.amountController.clear();
     viewModel.categoryController.clear();
     if (expensekey != null) {
-      final item = viewModel.expenseList
+      final item = locator<ExpenseService>()
+          .expenseList
           .firstWhere((element) => element['key'] == expensekey);
       viewModel.categoryController.text = item["Category"];
       viewModel.amountController.text = item["Amount"];

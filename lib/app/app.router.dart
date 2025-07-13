@@ -5,10 +5,10 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:daily_expense/pages/Home%20View/home_view.dart' as _i3;
-import 'package:daily_expense/pages/Monthly%20Expense/MonthlyExpense_view.dart'
+import 'package:daily_expense/view/Home%20View/home_view.dart' as _i3;
+import 'package:daily_expense/view/Monthly%20Expense/MonthlyExpense_view.dart'
     as _i4;
-import 'package:daily_expense/pages/Splash%20View/splash_view.dart' as _i2;
+import 'package:daily_expense/view/Splash%20View/splash_view.dart' as _i2;
 import 'package:flutter/material.dart' as _i5;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;

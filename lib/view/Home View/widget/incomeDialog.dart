@@ -1,4 +1,4 @@
-import 'package:daily_expense/pages/Home%20View/home_viewModel.dart';
+import 'package:daily_expense/view/Home%20View/home_viewModel.dart';
 import 'package:flutter/material.dart';
 
 class IncomeDialog extends StatelessWidget {

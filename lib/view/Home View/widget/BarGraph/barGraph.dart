@@ -1,4 +1,4 @@
-import 'package:daily_expense/pages/Home%20View/widget/BarGraph/bar_data.dart';
+import 'package:daily_expense/view/Home%20View/widget/BarGraph/bar_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
