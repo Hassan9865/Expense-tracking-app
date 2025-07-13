@@ -50,7 +50,7 @@ class ExpenseDialog extends StatelessWidget {
                 "Category": viewModel.categoryController.text,
                 "Amount": viewModel.amountController.text,
               };
-              if (key == null) {
+              if (expensekey == null) {
                 viewModel.addExpense(data);
               } else {
                 viewModel.updateExpense(expensekey!, data);
