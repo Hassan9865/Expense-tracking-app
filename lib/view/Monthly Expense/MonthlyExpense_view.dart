@@ -51,7 +51,7 @@ class MonthlyExpenseView extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '30 days recorded',
+                                'Monthly recorded',
                                 style: TextStyle(color: Colors.grey[600]),
                               ),
                             ],
