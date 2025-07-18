@@ -1,52 +1,58 @@
+import 'package:daily_expense/app/app.locator.dart';
+import 'package:daily_expense/services/expense_service.dart';
 import 'package:stacked/stacked.dart';
 
 class MonthlyExpenseViewModel extends BaseViewModel {
-  // ViewModel implementation would go here
-  // This should include all the data and methods needed by the view
+  final ExpenseService _expenseService = locator<ExpenseService>();
 
-  DateTime selectedMonth = DateTime.now();
-  int totalDays = 30;
-  double totalIncome = 75000;
-  double totalExpense = 45000;
-  double savings = 30000;
-  double dailyAverage = 1500;
+  int _currentIndex = 0;
 
-  List<Map<String, dynamic>> categoryExpenses = [
-    {'category': 'Food', 'amount': 12000, 'percentage': 0.3},
-    {'category': 'Transport', 'amount': 8000, 'percentage': 0.2},
-    {'category': 'Shopping', 'amount': 10000, 'percentage': 0.25},
-    {'category': 'Bills', 'amount': 7000, 'percentage': 0.175},
-    {'category': 'Entertainment', 'amount': 8000, 'percentage': 0.2},
-  ];
+  bool get hasData => _expenseService.monthlySummaries.isNotEmpty;
 
-  List<Map<String, dynamic>> recentTransactions = [
-    {
-      'category': 'Food',
-      'amount': '1,200',
-      'date': DateTime.now().subtract(const Duration(days: 1)),
-      'type': 'expense'
-    },
-    {
-      'category': 'Salary',
-      'amount': '25,000',
-      'date': DateTime.now().subtract(const Duration(days: 2)),
-      'type': 'income'
-    },
-    // Add more transactions...
-  ];
+  String get currentMonth => hasData
+      ? _expenseService.monthlySummaries[_currentIndex]['month']
+      : 'No Data';
 
-  void init() async {
-    // Load initial data
-    setBusy(true);
-    // await fetchData();
-    setBusy(false);
+  double get totalIncome => hasData
+      ? _expenseService.monthlySummaries[_currentIndex]['totalIncome'] ?? 0
+      : 0;
+
+  double get totalExpense => hasData
+      ? _expenseService.monthlySummaries[_currentIndex]['totalExpense'] ?? 0
+      : 0;
+
+  double get savings => hasData
+      ? _expenseService.monthlySummaries[_currentIndex]['savings'] ?? 0
+      : 0;
+
+  List<Map<String, dynamic>> get expenses => hasData
+      ? List<Map<String, dynamic>>.from(
+          _expenseService.monthlySummaries[_currentIndex]['expenses'] ?? [])
+      : [];
+
+  bool get hasNext => hasData && _currentIndex > 0;
+  bool get hasPrevious =>
+      hasData && _currentIndex < _expenseService.monthlySummaries.length - 1;
+
+  Future<void> init() async {
+    await _expenseService.init();
+    if (_expenseService.monthlySummaries.isNotEmpty) {
+      _currentIndex = 0;
+    }
+    notifyListeners();
   }
 
-  void selectMonth() {
-    // Implement month selection logic
+  void nextMonth() {
+    if (hasNext) {
+      _currentIndex--;
+      notifyListeners();
+    }
   }
 
-  void viewAllTransactions() {
-    // Navigate to full transactions list
+  void previousMonth() {
+    if (hasPrevious) {
+      _currentIndex++;
+      notifyListeners();
+    }
   }
 }
