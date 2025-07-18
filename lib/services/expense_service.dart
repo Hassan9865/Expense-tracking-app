@@ -16,6 +16,7 @@ class ExpenseService {
     readExpense();
     loadMonthlySummaries();
     _checkMonthEnd();
+    await _handleMonthEndTransition();
   }
 
   Future<void> _checkMonthEnd() async {
@@ -64,7 +65,8 @@ class ExpenseService {
       'totalIncome': totalIncome,
       'totalExpense': totalExpense,
       'savings': savings,
-      'expenses': expenseList,
+      'expenses': List<Map<String, dynamic>>.from(expenseList),
+      // 'expenses': expenseList,
       'timestamp': now.millisecondsSinceEpoch,
     };
 

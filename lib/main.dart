@@ -12,7 +12,6 @@ void main() async {
   await Hive.openBox("expenseBox");
   await Hive.openBox("incomeBox");
   await Hive.openBox("monthlyBox");
-  await Hive.openBox("metaBox");
   await locator<ExpenseService>().init();
   runApp(const MyApp());
 }

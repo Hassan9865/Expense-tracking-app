@@ -25,10 +25,18 @@ class MonthlyExpenseViewModel extends BaseViewModel {
       ? _expenseService.monthlySummaries[_currentIndex]['savings'] ?? 0
       : 0;
 
-  List<Map<String, dynamic>> get expenses => hasData
-      ? List<Map<String, dynamic>>.from(
-          _expenseService.monthlySummaries[_currentIndex]['expenses'] ?? [])
-      : [];
+  List<Map<String, dynamic>> get expenses {
+    if (!hasData) return [];
+
+    final rawExpenses =
+        _expenseService.monthlySummaries[_currentIndex]['expenses'] ?? [];
+
+    // Manually cast each item to Map<String, dynamic>
+    return List<Map<String, dynamic>>.from(
+      (rawExpenses as List)
+          .map<Map<String, dynamic>>((e) => Map<String, dynamic>.from(e)),
+    );
+  }
 
   bool get hasNext => hasData && _currentIndex > 0;
   bool get hasPrevious =>
@@ -45,13 +53,17 @@ class MonthlyExpenseViewModel extends BaseViewModel {
   void nextMonth() {
     if (hasNext) {
       _currentIndex--;
+      print('next month');
       notifyListeners();
     }
   }
 
   void previousMonth() {
+    print('Current index before: $_currentIndex');
+    print('Total months: ${_expenseService.monthlySummaries.length}');
     if (hasPrevious) {
       _currentIndex++;
+      print('Current index after: $_currentIndex');
       notifyListeners();
     }
   }

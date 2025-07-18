@@ -15,6 +15,7 @@ class HomePage extends StatelessWidget {
       onViewModelReady: (viewModel) => viewModel.readExpense(),
       builder: (context, HomeViewModel viewModel, index) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.grey[50],
           appBar: AppBar(
             title: const Text(

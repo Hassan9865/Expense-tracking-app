@@ -13,6 +13,9 @@ class MonthlyExpenseView extends StatelessWidget {
         viewModelBuilder: () => MonthlyExpenseViewModel(),
         onViewModelReady: (viewModel) => viewModel.init(),
         builder: (context, MonthlyExpenseViewModel viewModel, child) {
+          if (!viewModel.hasData) {
+            return const Center(child: Text("No data available"));
+          }
           return Scaffold(
             backgroundColor: Colors.grey[50],
             appBar: AppBar(
@@ -138,13 +141,7 @@ class MonthlyExpenseView extends StatelessWidget {
                           itemCount: viewModel.expenses.length,
                           itemBuilder: (context, index) {
                             var currentItem = viewModel.expenses[index];
-                            if (viewModel.hasData) {
-                              return Center(
-                                  child: Text(
-                                "No Monthly Data Found",
-                                style: TextStyle(fontSize: 50),
-                              ));
-                            }
+
                             return Container(
                               decoration: BoxDecoration(
                                   // border: Border(
@@ -181,7 +178,7 @@ class MonthlyExpenseView extends StatelessWidget {
                                 //   ),
                                 // ),
                                 trailing: Text(
-                                  currentItem['amount'].toString(),
+                                  currentItem['Amount'].toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red[600],
