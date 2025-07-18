@@ -25,11 +25,11 @@ class HomePage extends StatelessWidget {
             centerTitle: true,
             elevation: 0,
             actions: [
-              IconButton(
-                  onPressed: () {
-                    viewModel.navigateToMonthlyExpenseView();
-                  },
-                  icon: Icon(Icons.abc)),
+              // IconButton(
+              //     onPressed: () {
+              // viewModel.navigateToMonthlyExpenseView();
+              //     },
+              //     icon: Icon(Icons.abc)),
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
                 child: ElevatedButton.icon(
@@ -49,6 +49,32 @@ class HomePage extends StatelessWidget {
                     elevation: 2,
                   ),
                 ),
+              ),
+              PopupMenuButton<String>(
+                onSelected: (String value) {
+                  // setState(() {
+                  //   _selectedView = value;
+                  // });
+                  // Add your logic to switch between views
+                  if (value == 'Monthly Expenses') {
+                    viewModel.navigateToMonthlyExpenseView();
+                  } else {
+                    // Navigate to yearly view
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem<String>(
+                      value: 'Monthly Expenses',
+                      child: Text('Monthly Expenses'),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'Yearly Expenses',
+                      child: Text('Yearly Expenses'),
+                    ),
+                  ];
+                },
+                icon: Icon(Icons.more_vert), // You can use any icon here
               ),
             ],
           ),
@@ -92,62 +118,68 @@ class HomePage extends StatelessWidget {
                         itemCount: viewModel.expenseList().length,
                         itemBuilder: (context, index) {
                           var currentItem = viewModel.expenseList()[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom:
-                                    index != viewModel.expenseList().length - 1
-                                        ? BorderSide(
-                                            color: Colors.grey[200]!, width: 1)
-                                        : BorderSide.none,
-                              ),
-                            ),
-                            child: ListTile(
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) => EdExpense(
-                                    viewModel: viewModel, index: index),
-                              ),
-                              //  viewModel.showModel2(context, index),
-                              leading: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color:
-                                      _getCategoryColor(currentItem['Category'])
-                                          .withOpacity(0.2),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  _getCategoryIcon(currentItem['Category']),
-                                  color: _getCategoryColor(
-                                      currentItem['Category']),
-                                ),
-                              ),
-                              title: Text(
-                                currentItem['Category'] ?? "",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
-                                ),
-                              ),
-                              // subtitle: Text(
-                              //   DateFormat('hh:mm a').format(DateTime.parse(
-                              //       currentItem['Date'] ??
-                              //           DateTime.now().toString())),
-                              //   style: TextStyle(
-                              //     color: Colors.grey[500],
-                              //   ),
-                              // ),
-                              trailing: Text(
-                                "Rs. ${currentItem['Amount'] ?? ""}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red[600],
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          );
+                          return viewModel.expenseList().isEmpty
+                              ? Center(
+                                  child: Text("No Expenses"),
+                                )
+                              : Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: index !=
+                                              viewModel.expenseList().length - 1
+                                          ? BorderSide(
+                                              color: Colors.grey[200]!,
+                                              width: 1)
+                                          : BorderSide.none,
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    onTap: () => showDialog(
+                                      context: context,
+                                      builder: (context) => EdExpense(
+                                          viewModel: viewModel, index: index),
+                                    ),
+                                    //  viewModel.showModel2(context, index),
+                                    leading: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: _getCategoryColor(
+                                                currentItem['Category'])
+                                            .withOpacity(0.2),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        _getCategoryIcon(
+                                            currentItem['Category']),
+                                        color: _getCategoryColor(
+                                            currentItem['Category']),
+                                      ),
+                                    ),
+                                    title: Text(
+                                      currentItem['Category'] ?? "",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    // subtitle: Text(
+                                    //   DateFormat('hh:mm a').format(DateTime.parse(
+                                    //       currentItem['Date'] ??
+                                    //           DateTime.now().toString())),
+                                    //   style: TextStyle(
+                                    //     color: Colors.grey[500],
+                                    //   ),
+                                    // ),
+                                    trailing: Text(
+                                      "Rs. ${currentItem['Amount'] ?? ""}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red[600],
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                );
                         },
                       ),
                     ),

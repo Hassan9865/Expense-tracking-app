@@ -59,11 +59,8 @@ class MonthlyExpenseViewModel extends BaseViewModel {
   }
 
   void previousMonth() {
-    print('Current index before: $_currentIndex');
-    print('Total months: ${_expenseService.monthlySummaries.length}');
     if (hasPrevious) {
       _currentIndex++;
-      print('Current index after: $_currentIndex');
       notifyListeners();
     }
   }
