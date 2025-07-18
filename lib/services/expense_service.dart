@@ -16,7 +16,6 @@ class ExpenseService {
     readExpense();
     loadMonthlySummaries();
     _checkMonthEnd();
-    await _handleMonthEndTransition();
   }
 
   Future<void> _checkMonthEnd() async {

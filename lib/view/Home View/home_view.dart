@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
               "Daily Expense",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            centerTitle: true,
+            // centerTitle: true,
             elevation: 0,
             actions: [
               // IconButton(
@@ -30,23 +30,23 @@ class HomePage extends StatelessWidget {
               // viewModel.navigateToMonthlyExpenseView();
               //     },
               //     icon: Icon(Icons.abc)),
-              Padding(
-                padding: const EdgeInsets.only(right: 12.0),
-                child: ElevatedButton.icon(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) =>
-                        ExpenseDialog(viewModel: viewModel, expensekey: null),
-                  ),
-                  icon: const Icon(Icons.add, size: 20),
-                  label: const Text("Add Expense"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple[600],
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 2,
+              //
+              TextButton.icon(
+                onPressed: () => showDialog(
+                  context: context,
+                  builder: (context) =>
+                      ExpenseDialog(viewModel: viewModel, expensekey: null),
+                ),
+                icon: Icon(Icons.add, size: 16),
+                label:
+                    const Text("Add Expense ", style: TextStyle(fontSize: 12)),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.purple[600],
+                  foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
               ),
@@ -64,11 +64,11 @@ class HomePage extends StatelessWidget {
                 },
                 itemBuilder: (BuildContext context) {
                   return [
-                    PopupMenuItem<String>(
+                    const PopupMenuItem<String>(
                       value: 'Monthly Expenses',
                       child: Text('Monthly Expenses'),
                     ),
-                    PopupMenuItem<String>(
+                    const PopupMenuItem<String>(
                       value: 'Yearly Expenses',
                       child: Text('Yearly Expenses'),
                     ),
