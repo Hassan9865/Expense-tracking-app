@@ -111,18 +111,40 @@ class HomePage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: viewModel.expenseList().length,
-                        itemBuilder: (context, index) {
-                          var currentItem = viewModel.expenseList()[index];
-                          return viewModel.expenseList().isEmpty
-                              ? Center(
-                                  child: Text("No Expenses"),
-                                )
-                              : Container(
+                    child: viewModel.expenseList().isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.money_off,
+                                    size: 48, color: Colors.grey[400]),
+                                SizedBox(height: 16),
+                                Text(
+                                  "No Expenses Added",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Tap the + button to add your first expense",
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: ListView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: viewModel.expenseList().length,
+                              itemBuilder: (context, index) {
+                                var currentItem =
+                                    viewModel.expenseList()[index];
+                                return Container(
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: index !=
@@ -180,9 +202,9 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                        },
-                      ),
-                    ),
+                              },
+                            ),
+                          ),
                   ),
                 ),
 
