@@ -134,62 +134,89 @@ class MonthlyExpenseView extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: viewModel.expenses.length,
-                          itemBuilder: (context, index) {
-                            var currentItem = viewModel.expenses[index];
-
-                            return Container(
-                              decoration: BoxDecoration(
-                                  // border: Border(
-                                  //   bottom:
-                                  //       index != viewModel.expenseList().length - 1
-                                  //           ? BorderSide(
-                                  //               color: Colors.grey[200]!, width: 1)
-                                  //           : BorderSide.none,
-                                  // ),
+                      child: viewModel.expenses.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.money_off,
+                                      size: 48, color: Colors.grey[400]),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    "No Expenses Recorded This Month",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey[600],
+                                    ),
                                   ),
-                              child: ListTile(
-                                leading: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.greenAccent,
-                                    shape: BoxShape.circle,
+                                  SizedBox(height: 8),
+                                  Text(
+                                    "Your expenses will be summarized when the month ends",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey[500],
+                                    ),
                                   ),
-                                  child: Icon(Icons.monetization_on_rounded,
-                                      color: Colors.white),
-                                ),
-                                title: Text(
-                                  currentItem["Category"],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                                // subtitle: Text(
-                                //   DateFormat('hh:mm a').format(DateTime.parse(
-                                //       currentItem['Date'] ??
-                                //           DateTime.now().toString())),
-                                //   style: TextStyle(
-                                //     color: Colors.grey[500],
-                                //   ),
-                                // ),
-                                trailing: Text(
-                                  currentItem['Amount'].toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red[600],
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
-                      ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: viewModel.expenses.length,
+                                itemBuilder: (context, index) {
+                                  var currentItem = viewModel.expenses[index];
+
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        // border: Border(
+                                        //   bottom:
+                                        //       index != viewModel.expenseList().length - 1
+                                        //           ? BorderSide(
+                                        //               color: Colors.grey[200]!, width: 1)
+                                        //           : BorderSide.none,
+                                        // ),
+                                        ),
+                                    child: ListTile(
+                                      leading: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.greenAccent,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                            Icons.monetization_on_rounded,
+                                            color: Colors.white),
+                                      ),
+                                      title: Text(
+                                        currentItem["Category"],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                      // subtitle: Text(
+                                      //   DateFormat('hh:mm a').format(DateTime.parse(
+                                      //       currentItem['Date'] ??
+                                      //           DateTime.now().toString())),
+                                      //   style: TextStyle(
+                                      //     color: Colors.grey[500],
+                                      //   ),
+                                      // ),
+                                      trailing: Text(
+                                        currentItem['Amount'].toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red[600],
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                     ),
                   ),
                 ],
