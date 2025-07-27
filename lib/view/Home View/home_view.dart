@@ -60,6 +60,7 @@ class HomePage extends StatelessWidget {
                     viewModel.navigateToMonthlyExpenseView();
                   } else {
                     // Navigate to yearly view
+                    viewModel.navigateToYearlyExpenseView();
                   }
                 },
                 itemBuilder: (BuildContext context) {

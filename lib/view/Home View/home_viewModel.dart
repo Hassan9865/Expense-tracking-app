@@ -19,6 +19,10 @@ class HomeViewModel extends BaseViewModel {
     navigationService.navigateToMonthlyExpenseView();
   }
 
+  navigateToYearlyExpenseView() {
+    navigationService.navigateToYearlyExpenseView();
+  }
+
   Future<void> addIncome(String amount) async {
     await _expenseService.addIncome(amount);
     notifyListeners();
