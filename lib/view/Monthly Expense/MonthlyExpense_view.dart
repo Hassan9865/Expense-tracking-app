@@ -13,9 +13,6 @@ class MonthlyExpenseView extends StatelessWidget {
         viewModelBuilder: () => MonthlyExpenseViewModel(),
         onViewModelReady: (viewModel) => viewModel.init(),
         builder: (context, MonthlyExpenseViewModel viewModel, child) {
-          if (!viewModel.hasData) {
-            return const Center(child: Text("No data available"));
-          }
           return Scaffold(
             backgroundColor: Colors.grey[50],
             appBar: AppBar(
