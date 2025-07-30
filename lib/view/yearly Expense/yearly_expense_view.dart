@@ -9,6 +9,7 @@ class YearlyExpenseView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => YearlyExpenseViewmodel(),
+      onViewModelReady: (viewModel) => viewModel.init(),
       builder: (context, YearlyExpenseViewmodel viewModel, child) {
         return Scaffold(
           appBar: AppBar(
@@ -32,11 +33,13 @@ class YearlyExpenseView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.chevron_left),
+                          onPressed: () {
+                            viewModel.previousYear();
+                          },
+                          icon: const Icon(Icons.chevron_left),
                         ),
                         Text(
-                          '2025',
+                          '${viewModel.currentYear}',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -44,7 +47,9 @@ class YearlyExpenseView extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            viewModel.nextYear();
+                          },
                           icon: Icon(Icons.chevron_right),
                         ),
                       ],
@@ -87,98 +92,139 @@ class YearlyExpenseView extends StatelessWidget {
                                       TextStyle(fontWeight: FontWeight.bold))),
                         ],
                         rows: [
-                          DataRow(cells: [
-                            DataCell(Text("JAN")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("FEB")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("MAR")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("APR")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("MAY")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("JUN")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("JUL")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("AUG")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("SEP")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("OCT")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("NOV")),
-                            DataCell(Text("2500")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
-                          DataRow(cells: [
-                            DataCell(Text("DEC")),
-                            DataCell(Text("2700")),
-                            DataCell(Text("2000")),
-                            DataCell(Text("500")),
-                          ]),
+                          ...viewModel.filledMonthlyData.map((month) {
+                            return DataRow(cells: [
+                              DataCell(Text(month['month'])),
+                              DataCell(Text(
+                                  month['totalIncome'].toStringAsFixed(0))),
+                              DataCell(Text(
+                                  month['totalExpense'].toStringAsFixed(0))),
+                              DataCell(
+                                  Text(month['savings'].toStringAsFixed(0))),
+                            ]);
+                          }).toList(),
+
+                          // Total row
                           DataRow(
                             color: WidgetStateProperty.resolveWith<Color?>(
-                              (Set<WidgetState> states) => Colors.indigo[50],
+                              (states) => Colors.indigo[50],
                             ),
                             cells: [
-                              DataCell(Text("TOTAL",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold))),
-                              DataCell(Text("30000",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold))),
-                              DataCell(Text("24000",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold))),
-                              DataCell(Text("6000",
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold))),
+                              const DataCell(Text(
+                                "TOTAL",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )),
+                              DataCell(Text(
+                                viewModel.yearlyIncome.toStringAsFixed(0),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              )),
+                              DataCell(Text(
+                                viewModel.yearlyExpense.toStringAsFixed(0),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              )),
+                              DataCell(Text(
+                                viewModel.yearlySavings.toStringAsFixed(0),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              )),
                             ],
-                          ),
+                          )
                         ],
+                        // rows: [
+                        //   DataRow(cells: [
+                        //     DataCell(Text("JAN")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("FEB")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("MAR")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("APR")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("MAY")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("JUN")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("JUL")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("AUG")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("SEP")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("OCT")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("NOV")),
+                        //     DataCell(Text("2500")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(cells: [
+                        //     DataCell(Text("DEC")),
+                        //     DataCell(Text("2700")),
+                        //     DataCell(Text("2000")),
+                        //     DataCell(Text("500")),
+                        //   ]),
+                        //   DataRow(
+                        //     color: WidgetStateProperty.resolveWith<Color?>(
+                        //       (Set<WidgetState> states) => Colors.indigo[50],
+                        //     ),
+                        //     cells: [
+                        //       DataCell(Text("TOTAL",
+                        //           style:
+                        //               TextStyle(fontWeight: FontWeight.bold))),
+                        //       DataCell(Text("30000",
+                        //           style:
+                        //               TextStyle(fontWeight: FontWeight.bold))),
+                        //       DataCell(Text("24000",
+                        //           style:
+                        //               TextStyle(fontWeight: FontWeight.bold))),
+                        //       DataCell(Text("6000",
+                        //           style:
+                        //               TextStyle(fontWeight: FontWeight.bold))),
+                        //     ],
+                        //   ),
+                        // ],
                       ),
                     ),
                   ),
@@ -189,158 +235,5 @@ class YearlyExpenseView extends StatelessWidget {
         );
       },
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: const Text('Yearly Overview'),
-    //     centerTitle: true,
-    //     elevation: 0,
-    //   ),
-    //   body: SingleChildScrollView(
-    //     child: Column(
-    //       children: [
-    //         Container(
-    //           decoration: BoxDecoration(
-    //             color: Colors.grey[200],
-    //             borderRadius: BorderRadius.circular(20),
-    //           ),
-    //           child: Row(
-    //             mainAxisSize: MainAxisSize.min,
-    //             children: [
-    //               IconButton(
-    //                 onPressed: () {
-    //                   // viewModel.previousMonth();
-    //                 },
-    //                 icon: Icon(Icons.chevron_left, size: 24),
-    //                 color: Colors.indigo,
-    //                 splashRadius: 20,
-    //               ),
-    //               Text(
-    //                 '2025',
-    //                 style: TextStyle(
-    //                   color: Colors.grey[700],
-    //                   fontWeight: FontWeight.w400,
-    //                   fontSize: MediaQuery.of(context).size.width * 0.1,
-    //                 ),
-    //               ),
-    //               IconButton(
-    //                 onPressed: () {
-    //                   // viewModel.nextMonth();
-    //                 },
-    //                 icon: Icon(Icons.chevron_right, size: 24),
-    //                 color: Colors.indigo,
-    //                 splashRadius: 20,
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //         DataTable(columns: [
-    //           DataColumn(
-    //             label: Text('Months'),
-    //           ),
-    //           DataColumn(
-    //             label: Text('Income'),
-    //           ),
-    //           DataColumn(
-    //             label: Text('Expense'),
-    //           ),
-    //           DataColumn(
-    //             label: Text('Saving'),
-    //           )
-    //         ], rows: [
-    // DataRow(cells: [
-    //   DataCell(Text("JAN")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("FEB")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("MAR")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("APR")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("MAY")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("JUN")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("JUL")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("AUG")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("SEP")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("OCT")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("NOV")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    // DataRow(cells: [
-    //   DataCell(Text("DEC")),
-    //   DataCell(Text("2500")),
-    //   DataCell(Text("2000")),
-    //   DataCell(Text("500")),
-    // ]),
-    //           DataRow(color: Colors.indigo, cells: [
-    //             DataCell(Text(
-    //               "TOTAL",
-    //               style: TextStyle(fontWeight: FontWeight.bold),
-    //             )),
-    //             DataCell(Text(
-    //               "2500",
-    //               style: TextStyle(fontWeight: FontWeight.bold),
-    //             )),
-    //             DataCell(Text(
-    //               "2000",
-    //               style: TextStyle(fontWeight: FontWeight.bold),
-    //             )),
-    //             DataCell(Text(
-    //               "500",
-    //               style: TextStyle(fontWeight: FontWeight.bold),
-    //             )),
-    //           ]),
-    //         ])
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }

@@ -5,6 +5,7 @@ class ExpenseService {
   late Box expenseBox;
   late Box incomeBox;
   late Box monthlyBox;
+  late Box yearlyBox;
 
   List<Map<String, dynamic>> expenseList = [];
   List<Map<String, dynamic>> monthlySummaries = [];
@@ -13,9 +14,11 @@ class ExpenseService {
     expenseBox = await Hive.openBox("expenseBox");
     incomeBox = await Hive.openBox("incomeBox");
     monthlyBox = await Hive.openBox("monthlyBox");
+    yearlyBox = await Hive.openBox("yearlyBox");
     readExpense();
     loadMonthlySummaries();
     _checkMonthEnd();
+    _checkYearEnd();
   }
 
   Future<void> _checkMonthEnd() async {
@@ -25,7 +28,75 @@ class ExpenseService {
 
     if (lastRecordedMonth != null && lastRecordedMonth != currentMonth) {
       await _handleMonthEndTransition();
+    } else if (lastRecordedMonth == null) {
+      await incomeBox.put('lastRecordedMonth', currentMonth);
     }
+  }
+
+  Future<void> _checkYearEnd() async {
+    final currentYear = DateTime.now().year;
+    final lastRecordedYear = incomeBox.get('lastRecordedYear');
+
+    if (lastRecordedYear != null && lastRecordedYear != currentYear) {
+      await _handleYearEndTransition();
+    } else if (lastRecordedYear == null) {
+      await incomeBox.put('lastRecordedYear', currentYear);
+    }
+  }
+
+  Future<void> _handleYearEndTransition() async {
+    final now = DateTime.now();
+    final currentYear = now.year.toString();
+
+    final yearSummaries = monthlyBox.keys
+        .where((key) => key.toString().endsWith(currentYear))
+        .map((key) => monthlyBox.get(key))
+        .toList();
+
+    final yearlyIncome =
+        yearSummaries.fold(0.0, (sum, m) => sum + (m['totalIncome'] ?? 0));
+    final yearlyExpense =
+        yearSummaries.fold(0.0, (sum, m) => sum + (m['totalExpense'] ?? 0));
+    final yearlySavings = yearlyIncome - yearlyExpense;
+
+    final yearlyData = {
+      'year': currentYear,
+      'totalIncome': yearlyIncome,
+      'totalExpense': yearlyExpense,
+      'savings': yearlySavings,
+      'monthlySummaries': yearSummaries,
+      'timestamp': now.millisecondsSinceEpoch,
+    };
+
+    await yearlyBox.put(currentYear, yearlyData);
+    await incomeBox.put('lastRecordedYear', now.year);
+  }
+
+  Future<void> loadYearlySummaries() async {
+    final yearlyData = yearlyBox.keys.map((key) {
+      final data = yearlyBox.get(key);
+      return {
+        'year': key,
+        'totalIncome': data['totalIncome'],
+        'totalExpense': data['totalExpense'],
+        'savings': data['savings'],
+        'monthlySummaries': data['monthlySummaries'],
+      };
+    }).toList();
+
+    yearlyData
+        .sort((a, b) => (b['year'] as String).compareTo(a['year'] as String));
+  }
+
+// 5. Get data for specific year
+  Map<String, dynamic>? getYearlyData(String year) {
+    return yearlyBox.get(year);
+  }
+
+// 6. Get all available years
+  List<String> getAvailableYears() {
+    return yearlyBox.keys.cast<String>().toList()
+      ..sort((a, b) => b.compareTo(a));
   }
 
   Future<void> _handleMonthEndTransition() async {
@@ -39,8 +110,10 @@ class ExpenseService {
     readExpense();
 
     // 3. Update last recorded month
-    await incomeBox.put(
-        'lastRecordedMonth', DateFormat('MMM yyyy').format(DateTime.now()));
+    final currentMonthYear = DateFormat('MMM yyyy').format(DateTime.now());
+    await incomeBox.put('lastRecordedMonth', currentMonthYear);
+
+    await _checkYearEnd();
 
     loadMonthlySummaries();
   }
