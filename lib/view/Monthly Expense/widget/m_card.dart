@@ -31,23 +31,23 @@ class MCard extends ViewModelWidget<MonthlyExpenseViewModel> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: TextStyle(color: Colors.grey[600]),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 Icon(icon, color: color.withOpacity(0.8), size: 20),
               ],
             ),
             Flexible(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  'Rs. ${NumberFormat('#,##0').format(amount)}',
-                  style: TextStyle(
-                    // fontSize: MediaQuery.of(context).size.width * 0.03,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
+              child: Text(
+                'Rs. ${NumberFormat('#,##0').format(amount)}',
+                style: TextStyle(
+                  // fontSize: MediaQuery.of(context).size.width * 0.03,
+                  fontWeight: FontWeight.bold,
+                  color: color,
                 ),
               ),
             ),

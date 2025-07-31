@@ -91,16 +91,16 @@ class MonthlyExpenseView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
 
                   // Summary Cards
                   GridView.count(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 3,
+                    crossAxisCount: 2,
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
-                    childAspectRatio: 1.2,
+                    childAspectRatio: 1.8,
                     children: [
                       MCard(
                         title: 'Income',
@@ -109,13 +109,19 @@ class MonthlyExpenseView extends StatelessWidget {
                         color: Colors.green,
                       ),
                       MCard(
+                        title: 'Last Month Savings',
+                        amount: viewModel.savings,
+                        icon: Icons.savings,
+                        color: Colors.blue,
+                      ),
+                      MCard(
                         title: 'Expense',
                         amount: viewModel.totalExpense,
                         icon: Icons.arrow_downward,
                         color: Colors.red,
                       ),
                       MCard(
-                        title: 'Savings',
+                        title: 'Total Savings',
                         amount: viewModel.savings,
                         icon: Icons.savings,
                         color: Colors.blue,
