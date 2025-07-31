@@ -5,15 +5,30 @@ import 'package:stacked/stacked.dart';
 class YearlyExpenseViewmodel extends BaseViewModel {
   final _expenseService = locator<ExpenseService>();
 
-  int _currentYear = DateTime.now().year;
+  // int _currentYear = DateTime.now().year;
+  int _currentYear = 0;
+
   Map<String, dynamic>? _yearData;
 
   List<Map<String, dynamic>> _filledMonthlyData = [];
 
   int get currentYear => _currentYear;
 
+  // Future<void> init() async {
+  //   await _expenseService.loadMonthlySummaries();
+  //   _loadYearData();
+  // }
+
   Future<void> init() async {
     await _expenseService.loadMonthlySummaries();
+    await _expenseService.loadYearlySummaries();
+    final years = _expenseService.getAvailableYears();
+
+    if (years.isNotEmpty) {
+      _currentYear = int.parse(years.first);
+    } else {
+      _currentYear = DateTime.now().year;
+    }
     _loadYearData();
   }
 
@@ -64,21 +79,23 @@ class YearlyExpenseViewmodel extends BaseViewModel {
   double get yearlyExpense => _yearData?['totalExpense'] ?? 0.0;
   double get yearlySavings => _yearData?['savings'] ?? 0.0;
 
-  void previousYear() {
+  void nextYear() {
     final years = _expenseService.getAvailableYears();
     final index = years.indexOf(_currentYear.toString());
     if (index > 0) {
       _currentYear = int.parse(years[index - 1]);
       _loadYearData();
     }
+    notifyListeners();
   }
 
-  void nextYear() {
+  void previousYear() {
     final years = _expenseService.getAvailableYears();
     final index = years.indexOf(_currentYear.toString());
     if (index < years.length - 1) {
       _currentYear = int.parse(years[index + 1]);
       _loadYearData();
     }
+    notifyListeners();
   }
 }

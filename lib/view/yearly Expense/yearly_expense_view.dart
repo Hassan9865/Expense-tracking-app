@@ -1,3 +1,5 @@
+import 'package:daily_expense/app/app.locator.dart';
+import 'package:daily_expense/services/expense_service.dart';
 import 'package:daily_expense/view/yearly%20Expense/yearly_expense_viewModel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -35,6 +37,10 @@ class YearlyExpenseView extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             viewModel.previousYear();
+                            print(
+                                "Yearly Box Keys: ${locator<ExpenseService>().yearlyBox.keys}");
+                            print(
+                                "Monthly Box Keys: ${locator<ExpenseService>().monthlyBox.keys}");
                           },
                           icon: const Icon(Icons.chevron_left),
                         ),

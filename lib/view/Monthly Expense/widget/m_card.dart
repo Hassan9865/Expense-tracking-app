@@ -38,12 +38,17 @@ class MCard extends ViewModelWidget<MonthlyExpenseViewModel> {
                 Icon(icon, color: color.withOpacity(0.8), size: 20),
               ],
             ),
-            Text(
-              'Rs. ${NumberFormat('#,##0').format(amount)}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Rs. ${NumberFormat('#,##0').format(amount)}',
+                  style: TextStyle(
+                    // fontSize: MediaQuery.of(context).size.width * 0.03,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
               ),
             ),
           ],

@@ -25,12 +25,15 @@ class HomePage extends StatelessWidget {
             // centerTitle: true,
             elevation: 0,
             actions: [
-              // IconButton(
-              //     onPressed: () {
-              // viewModel.navigateToMonthlyExpenseView();
-              //     },
-              //     icon: Icon(Icons.abc)),
-              //
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     await viewModel.expenseService
+              //         .createMonthlySummary(); // Test Monthly
+              //     await viewModel.expenseService
+              //         .handleYearEndTransition(); // Test Yearly
+              //   },
+              //   child: const Text("Test Save Summary"),
+              // ),
               TextButton.icon(
                 onPressed: () => showDialog(
                   context: context,

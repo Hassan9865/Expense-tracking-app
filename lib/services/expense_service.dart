@@ -19,22 +19,13 @@ class ExpenseService {
     loadMonthlySummaries();
     _checkMonthEnd();
     _checkYearEnd();
-  }
-
-  Future<void> _checkMonthEnd() async {
-    final now = DateTime.now();
-    final lastRecordedMonth = incomeBox.get('lastRecordedMonth');
-    final currentMonth = DateFormat('MMM yyyy').format(now);
-
-    if (lastRecordedMonth != null && lastRecordedMonth != currentMonth) {
-      await _handleMonthEndTransition();
-    } else if (lastRecordedMonth == null) {
-      await incomeBox.put('lastRecordedMonth', currentMonth);
-    }
+    _handleMonthEndTransition();
   }
 
   Future<void> _checkYearEnd() async {
-    final currentYear = DateTime.now().year;
+    final currentYear = DateTime(2026);
+
+    // final currentYear = DateTime.now().year;
     final lastRecordedYear = incomeBox.get('lastRecordedYear');
 
     if (lastRecordedYear != null && lastRecordedYear != currentYear) {
@@ -45,7 +36,9 @@ class ExpenseService {
   }
 
   Future<void> _handleYearEndTransition() async {
-    final now = DateTime.now();
+    // final now = DateTime.now();
+    final now = DateTime(2026, 5, 1);
+
     final currentYear = now.year.toString();
 
     final yearSummaries = monthlyBox.keys
@@ -99,6 +92,19 @@ class ExpenseService {
       ..sort((a, b) => b.compareTo(a));
   }
 
+  Future<void> _checkMonthEnd() async {
+    // final now = DateTime(2024, 8, 1);
+    final now = DateTime.now();
+    final lastRecordedMonth = incomeBox.get('lastRecordedMonth');
+    final currentMonth = DateFormat('MMM yyyy').format(now);
+
+    if (lastRecordedMonth != null && lastRecordedMonth != currentMonth) {
+      await _handleMonthEndTransition();
+    } else if (lastRecordedMonth == null) {
+      await incomeBox.put('lastRecordedMonth', currentMonth);
+    }
+  }
+
   Future<void> _handleMonthEndTransition() async {
     // 1. Save current month's data
     final savings = getSaving();
@@ -110,7 +116,9 @@ class ExpenseService {
     readExpense();
 
     // 3. Update last recorded month
-    final currentMonthYear = DateFormat('MMM yyyy').format(DateTime.now());
+    // final currentMonthYear = DateFormat('MMM yyyy').format(DateTime.now());
+    final currentMonthYear =
+        DateFormat('MMM yyyy').format(DateTime(2026, 5, 1));
     await incomeBox.put('lastRecordedMonth', currentMonthYear);
 
     await _checkYearEnd();
@@ -120,13 +128,14 @@ class ExpenseService {
 
   // Add this method to create monthly summaries
   Future<void> _createMonthlySummary() async {
-    final now = DateTime.now();
+    final now = DateTime(2026, 5, 1);
+    // final now = DateTime.now();
     final currentMonthYear = DateFormat('MMM yyyy').format(now);
 
     // Check if summary already exists for this month
-    if (monthlyBox.containsKey(currentMonthYear)) {
-      return;
-    }
+    // if (monthlyBox.containsKey(currentMonthYear)) {
+    //   return;
+    // }
 
     final totalIncome = double.tryParse(getIncome()) ?? 0;
     final totalExpense = getTotalExpense();
