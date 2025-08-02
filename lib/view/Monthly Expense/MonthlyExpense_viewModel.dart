@@ -17,6 +17,14 @@ class MonthlyExpenseViewModel extends BaseViewModel {
       ? _expenseService.monthlySummaries[_currentIndex]['totalIncome'] ?? 0
       : 0;
 
+  double get actualIncome => hasData
+      ? _expenseService.monthlySummaries[_currentIndex]['actualIncome'] ?? 0
+      : 0;
+
+  double get lastMonthSaving => hasData
+      ? _expenseService.monthlySummaries[_currentIndex]['lastMonthSaving'] ?? 0
+      : 0;
+
   double get totalExpense => hasData
       ? _expenseService.monthlySummaries[_currentIndex]['totalExpense'] ?? 0
       : 0;

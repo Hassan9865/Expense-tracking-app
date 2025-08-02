@@ -104,13 +104,13 @@ class MonthlyExpenseView extends StatelessWidget {
                     children: [
                       MCard(
                         title: 'Income',
-                        amount: viewModel.totalIncome,
+                        amount: viewModel.actualIncome,
                         icon: Icons.arrow_upward,
                         color: Colors.green,
                       ),
                       MCard(
                         title: 'Last Month Savings',
-                        amount: viewModel.savings,
+                        amount: viewModel.lastMonthSaving,
                         icon: Icons.savings,
                         color: Colors.blue,
                       ),

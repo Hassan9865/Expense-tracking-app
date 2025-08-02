@@ -102,7 +102,7 @@ class YearlyExpenseView extends StatelessWidget {
                             return DataRow(cells: [
                               DataCell(Text(month['month'])),
                               DataCell(Text(
-                                  month['totalIncome'].toStringAsFixed(0))),
+                                  month['actualIncome'].toStringAsFixed(0))),
                               DataCell(Text(
                                   month['totalExpense'].toStringAsFixed(0))),
                               DataCell(
