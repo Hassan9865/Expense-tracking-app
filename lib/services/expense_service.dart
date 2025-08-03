@@ -16,17 +16,112 @@ class ExpenseService {
     monthlyBox = await Hive.openBox("monthlyBox");
     yearlyBox = await Hive.openBox("yearlyBox");
     readExpense();
+    await loadMonthlySummaries();
+    await _checkMonthEnd();
+    await _checkYearEnd();
+  }
+
+  Future<void> _checkMonthEnd() async {
+    // final now = DateTime(2027, 4, 1);
+    final now = DateTime.now();
+    final lastRecordedMonth = incomeBox.get('lastRecordedMonth');
+    final currentMonth = DateFormat('MMM yyyy').format(now);
+
+    if (lastRecordedMonth == null) {
+      await incomeBox.put('lastRecordedMonth', currentMonth);
+      return;
+    }
+
+    if (lastRecordedMonth != currentMonth) {
+      await _handleMonthEndTransition();
+    }
+  }
+
+  Future<void> _handleMonthEndTransition() async {
+    // final now = DateTime(2027, 4, 1);
+
+    final now = DateTime.now();
+    final previousMonthDate = DateTime(now.year, now.month - 1, 1);
+    // 1. Save current month's data
+    await _createMonthlySummary(previousMonthDate);
+    final savings = getSaving();
+    await incomeBox.put('lastMonthSaving', savings);
+
+    // 2. Reset for new month (savings become new income)
+    await incomeBox.put('userIncome', savings);
+    await expenseBox.clear();
+    readExpense();
+
+    // 3. Update last recorded month
+    final currentMonthYear = DateFormat('MMM yyyy').format(now);
+    // final currentMonthYear =
+    //     DateFormat('MMM yyyy').format(DateTime(2026, 3, 1));
+    await incomeBox.put('lastRecordedMonth', currentMonthYear);
+
+    await _checkYearEnd();
+
     loadMonthlySummaries();
-    _checkMonthEnd();
-    _checkYearEnd();
-    _handleMonthEndTransition();
-    // _handleYearEndTransition();
+  }
+
+  // Add this method to create monthly summaries
+  Future<void> _createMonthlySummary(DateTime date) async {
+    final currentMonthYear = DateFormat('MMM yyyy').format(date);
+
+    final totalIncome = double.tryParse(getIncome()) ?? 0;
+    final totalExpense = getTotalExpense();
+    final lastMonthSaving = incomeBox.get('lastMonthSaving') ?? 0.0;
+    final actualIncome = totalIncome - lastMonthSaving;
+    final savings = totalIncome - totalExpense;
+
+    final monthlyData = {
+      'month': currentMonthYear,
+      'totalIncome': totalIncome,
+      'actualIncome': actualIncome,
+      'lastMonthSaving': lastMonthSaving,
+      'totalExpense': totalExpense,
+      'savings': savings,
+      'expenses': List<Map<String, dynamic>>.from(expenseList),
+      // 'expenses': expenseList,
+      'timestamp': date.millisecondsSinceEpoch,
+    };
+
+    await monthlyBox.put(currentMonthYear, monthlyData);
+    print('Created monthly summary for $currentMonthYear');
+
+    // _loadMonthlySummaries();
+    // print('=== Monthly Summary ===');
+    // print('userIncome: $totalIncome');
+    // print('lastMonthSaving: $lastMonthSaving');
+    // print('actualIncome (userIncome - lastSaving): $actualIncome');
+    // print('totalExpense: $totalExpense');
+    // print('savings: $savings');
+  }
+
+  Future<void> loadMonthlySummaries() async {
+    monthlySummaries = monthlyBox.keys.map((key) {
+      final data = monthlyBox.get(key);
+      return {
+        'month': key,
+        'actualIncome': data['actualIncome'] ?? 0.0,
+        'lastMonthSaving': data['lastMonthSaving'] ?? 0.0,
+        'totalIncome': data['totalIncome'],
+        'totalExpense': data['totalExpense'],
+        'savings': data['savings'],
+        'expenses': data['expenses'],
+      };
+    }).toList();
+
+    // Sort by timestamp (newest first)
+    monthlySummaries.sort((a, b) {
+      final aTime = monthlyBox.get(a['month'])['timestamp'];
+      final bTime = monthlyBox.get(b['month'])['timestamp'];
+      return bTime.compareTo(aTime);
+    });
   }
 
   Future<void> _checkYearEnd() async {
-    final currentYear = 2027;
-
-    // final currentYear = DateTime.now().year;
+    // final currentYear = 2027;
+    final currentYear = DateTime.now().year;
     final lastRecordedYear = incomeBox.get('lastRecordedYear');
 
     if (lastRecordedYear != null && lastRecordedYear != currentYear) {
@@ -37,13 +132,12 @@ class ExpenseService {
   }
 
   Future<void> _handleYearEndTransition() async {
-    // final now = DateTime.now();
-    final now = DateTime(2027, 3, 1);
-
-    final currentYear = now.year.toString();
+    final now = DateTime.now();
+    // final now = DateTime(2027, 2, 1);
+    final previousYear = (now.year - 1).toString();
 
     final yearSummaries = monthlyBox.keys
-        .where((key) => key.toString().endsWith(currentYear))
+        .where((key) => key.toString().endsWith(previousYear))
         .map((key) {
       final data = monthlyBox.get(key);
       return Map<String, dynamic>.from(data);
@@ -54,12 +148,12 @@ class ExpenseService {
     final yearlyExpense =
         yearSummaries.fold(0.0, (sum, m) => sum + (m['totalExpense'] ?? 0));
     final yearlySavings = yearlyIncome - yearlyExpense;
-    print('Yearly Income: $yearlyIncome');
-    print('Yearly Expense: $yearlyExpense');
-    print('Calculated Yearly Savings: $yearlySavings');
+    // print('Yearly Income: $yearlyIncome');
+    // print('Yearly Expense: $yearlyExpense');
+    // print('Calculated Yearly Savings: $yearlySavings');
 
     final yearlyData = {
-      'year': currentYear,
+      'year': previousYear,
       'actualIncome': yearlyIncome,
       'totalExpense': yearlyExpense,
       'savings': yearlySavings,
@@ -67,7 +161,7 @@ class ExpenseService {
       'timestamp': now.millisecondsSinceEpoch,
     };
 
-    await yearlyBox.put(currentYear, yearlyData);
+    await yearlyBox.put(previousYear, yearlyData);
     await incomeBox.put('lastRecordedYear', now.year);
   }
 
@@ -94,101 +188,20 @@ class ExpenseService {
     return data != null ? Map<String, dynamic>.from(data) : null;
   }
 
-// 6. Get all available years
   List<String> getAvailableYears() {
-    return yearlyBox.keys.cast<String>().toList()
-      ..sort((a, b) => b.compareTo(a));
-  }
+    // final now = DateTime(2027, 4, 1);
 
-  Future<void> _checkMonthEnd() async {
-    // final now = DateTime(2024, 8, 1);
-    final now = DateTime.now();
-    final lastRecordedMonth = incomeBox.get('lastRecordedMonth');
-    final currentMonth = DateFormat('MMM yyyy').format(now);
+    // final currentYear = now.year.toString();
 
-    if (lastRecordedMonth != null && lastRecordedMonth != currentMonth) {
-      await _handleMonthEndTransition();
-    } else if (lastRecordedMonth == null) {
-      await incomeBox.put('lastRecordedMonth', currentMonth);
+    final currentYear = DateTime.now().year.toString();
+
+    final keys = yearlyBox.keys.map((e) => e.toString()).toList();
+    if (!keys.contains(currentYear)) {
+      keys.add(currentYear);
     }
-  }
-
-  Future<void> _handleMonthEndTransition() async {
-    // 1. Save current month's data
-    await _createMonthlySummary();
-    final savings = getSaving();
-    await incomeBox.put('lastMonthSaving', savings);
-
-    // 2. Reset for new month (savings become new income)
-    await incomeBox.put('userIncome', savings);
-    await expenseBox.clear();
-    readExpense();
-
-    // 3. Update last recorded month
-    // final currentMonthYear = DateFormat('MMM yyyy').format(DateTime.now());
-    final currentMonthYear =
-        DateFormat('MMM yyyy').format(DateTime(2027, 3, 1));
-    await incomeBox.put('lastRecordedMonth', currentMonthYear);
-
-    await _checkYearEnd();
-
-    loadMonthlySummaries();
-  }
-
-  // Add this method to create monthly summaries
-  Future<void> _createMonthlySummary() async {
-    final now = DateTime(2027, 3, 1);
-    // final now = DateTime.now();
-    final currentMonthYear = DateFormat('MMM yyyy').format(now);
-
-    final totalIncome = double.tryParse(getIncome()) ?? 0;
-    final totalExpense = getTotalExpense();
-    final lastMonthSaving = incomeBox.get('lastMonthSaving') ?? 0.0;
-    final actualIncome = totalIncome - lastMonthSaving;
-    final savings = totalIncome - totalExpense;
-
-    final monthlyData = {
-      'month': currentMonthYear,
-      'totalIncome': totalIncome,
-      'actualIncome': actualIncome,
-      'lastMonthSaving': lastMonthSaving,
-      'totalExpense': totalExpense,
-      'savings': savings,
-      'expenses': List<Map<String, dynamic>>.from(expenseList),
-      // 'expenses': expenseList,
-      'timestamp': now.millisecondsSinceEpoch,
-    };
-
-    await monthlyBox.put(currentMonthYear, monthlyData);
-    // _loadMonthlySummaries();
-    print('=== Monthly Summary ===');
-    print('userIncome: $totalIncome');
-    print('lastMonthSaving: $lastMonthSaving');
-    print('actualIncome (userIncome - lastSaving): $actualIncome');
-    print('totalExpense: $totalExpense');
-    print('savings: $savings');
-  }
-
-  Future<void> loadMonthlySummaries() async {
-    monthlySummaries = monthlyBox.keys.map((key) {
-      final data = monthlyBox.get(key);
-      return {
-        'month': key,
-        'actualIncome': data['actualIncome'] ?? 0.0,
-        'lastMonthSaving': data['lastMonthSaving'] ?? 0.0,
-        'totalIncome': data['totalIncome'],
-        'totalExpense': data['totalExpense'],
-        'savings': data['savings'],
-        'expenses': data['expenses'],
-      };
-    }).toList();
-
-    // Sort by timestamp (newest first)
-    monthlySummaries.sort((a, b) {
-      final aTime = monthlyBox.get(a['month'])['timestamp'];
-      final bTime = monthlyBox.get(b['month'])['timestamp'];
-      return bTime.compareTo(aTime);
-    });
+    keys.sort((a, b) => b.compareTo(a));
+    // print('Available years: $keys');
+    return keys;
   }
 
   double getTotalExpense() {

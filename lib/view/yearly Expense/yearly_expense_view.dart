@@ -79,7 +79,7 @@ class YearlyExpenseView extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        columns: [
+                        columns: const [
                           DataColumn(
                               label: Text('Month',
                                   style:
@@ -138,99 +138,6 @@ class YearlyExpenseView extends StatelessWidget {
                             ],
                           )
                         ],
-                        // rows: [
-                        //   DataRow(cells: [
-                        //     DataCell(Text("JAN")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("FEB")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("MAR")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("APR")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("MAY")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("JUN")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("JUL")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("AUG")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("SEP")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("OCT")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("NOV")),
-                        //     DataCell(Text("2500")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(cells: [
-                        //     DataCell(Text("DEC")),
-                        //     DataCell(Text("2700")),
-                        //     DataCell(Text("2000")),
-                        //     DataCell(Text("500")),
-                        //   ]),
-                        //   DataRow(
-                        //     color: WidgetStateProperty.resolveWith<Color?>(
-                        //       (Set<WidgetState> states) => Colors.indigo[50],
-                        //     ),
-                        //     cells: [
-                        //       DataCell(Text("TOTAL",
-                        //           style:
-                        //               TextStyle(fontWeight: FontWeight.bold))),
-                        //       DataCell(Text("30000",
-                        //           style:
-                        //               TextStyle(fontWeight: FontWeight.bold))),
-                        //       DataCell(Text("24000",
-                        //           style:
-                        //               TextStyle(fontWeight: FontWeight.bold))),
-                        //       DataCell(Text("6000",
-                        //           style:
-                        //               TextStyle(fontWeight: FontWeight.bold))),
-                        //     ],
-                        //   ),
-                        // ],
                       ),
                     ),
                   ),

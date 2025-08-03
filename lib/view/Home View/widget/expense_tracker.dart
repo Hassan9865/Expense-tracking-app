@@ -89,7 +89,6 @@ class ExpenseTracker extends ViewModelWidget<HomeViewModel> {
                   iconColor: Colors.amber.shade300,
                 ),
 
-                // Spacer to push button to bottom
                 SizedBox(height: 10),
               ],
             ),

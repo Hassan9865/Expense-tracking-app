@@ -25,15 +25,6 @@ class HomePage extends StatelessWidget {
             // centerTitle: true,
             elevation: 0,
             actions: [
-              // ElevatedButton(
-              //   onPressed: () async {
-              //     await viewModel.expenseService
-              //         .createMonthlySummary(); // Test Monthly
-              //     await viewModel.expenseService
-              //         .handleYearEndTransition(); // Test Yearly
-              //   },
-              //   child: const Text("Test Save Summary"),
-              // ),
               TextButton.icon(
                 onPressed: () => showDialog(
                   context: context,
@@ -55,40 +46,33 @@ class HomePage extends StatelessWidget {
               ),
               PopupMenuButton<String>(
                 onSelected: (String value) {
-                  // setState(() {
-                  //   _selectedView = value;
-                  // });
-                  // Add your logic to switch between views
-                  if (value == 'Monthly Expenses') {
+                  if (value == 'Monthly Overview') {
                     viewModel.navigateToMonthlyExpenseView();
                   } else {
-                    // Navigate to yearly view
                     viewModel.navigateToYearlyExpenseView();
                   }
                 },
                 itemBuilder: (BuildContext context) {
                   return [
                     const PopupMenuItem<String>(
-                      value: 'Monthly Expenses',
-                      child: Text('Monthly Expenses'),
+                      value: 'Monthly Overview',
+                      child: Text('Monthly Overview'),
                     ),
                     const PopupMenuItem<String>(
-                      value: 'Yearly Expenses',
-                      child: Text('Yearly Expenses'),
+                      value: 'Yearly Overview',
+                      child: Text('Yearly Overview'),
                     ),
                   ];
                 },
-                icon: Icon(Icons.more_vert), // You can use any icon here
+                icon: const Icon(Icons.more_vert),
               ),
             ],
           ),
           body: SafeArea(
             child: Column(
               children: [
-                // Stats Card
                 const ExpenseTracker(),
 
-                // Recent Transactions Header
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
