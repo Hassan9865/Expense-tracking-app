@@ -54,8 +54,7 @@ class ExpenseService {
 
     // 3. Update last recorded month
     final currentMonthYear = DateFormat('MMM yyyy').format(now);
-    // final currentMonthYear =
-    //     DateFormat('MMM yyyy').format(DateTime(2026, 3, 1));
+
     await incomeBox.put('lastRecordedMonth', currentMonthYear);
 
     await _checkYearEnd();
