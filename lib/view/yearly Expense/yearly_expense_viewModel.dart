@@ -7,6 +7,15 @@ class YearlyExpenseViewmodel extends BaseViewModel {
   int _currentYear = DateTime.now().year; // Initialize with current year
   List<Map<String, dynamic>> _filledMonthlyData = [];
 
+  bool _isInfoExpanded = false;
+
+  bool get isInfoExpanded => _isInfoExpanded;
+
+  void toggleInfoExpanded() {
+    _isInfoExpanded = !_isInfoExpanded;
+    notifyListeners();
+  }
+
   int get currentYear => _currentYear;
   List<Map<String, dynamic>> get filledMonthlyData => _filledMonthlyData;
 
@@ -51,7 +60,6 @@ class YearlyExpenseViewmodel extends BaseViewModel {
       // Load all months data
       _filledMonthlyData = _loadAllMonthsData();
 
-      // Calculate and cache yearly totals
       _calculateYearlyTotals();
 
       notifyListeners();

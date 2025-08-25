@@ -22,8 +22,8 @@ class ExpenseService {
   }
 
   Future<void> _checkMonthEnd() async {
-    // final now = DateTime(2027, 4, 1);
-    final now = DateTime.now();
+    final now = DateTime(2025, 9, 1);
+    // final now = DateTime.now();
     final lastRecordedMonth = incomeBox.get('lastRecordedMonth');
     final currentMonth = DateFormat('MMM yyyy').format(now);
 
@@ -38,9 +38,9 @@ class ExpenseService {
   }
 
   Future<void> _handleMonthEndTransition() async {
-    // final now = DateTime(2027, 4, 1);
+    final now = DateTime(2025, 9, 1);
 
-    final now = DateTime.now();
+    // final now = DateTime.now();
     final previousMonthDate = DateTime(now.year, now.month - 1, 1);
     // 1. Save current month's data
     await _createMonthlySummary(previousMonthDate);
@@ -62,7 +62,6 @@ class ExpenseService {
     loadMonthlySummaries();
   }
 
-  // Add this method to create monthly summaries
   Future<void> _createMonthlySummary(DateTime date) async {
     final currentMonthYear = DateFormat('MMM yyyy').format(date);
 
@@ -110,12 +109,34 @@ class ExpenseService {
       };
     }).toList();
 
-    // Sort by timestamp (newest first)
     monthlySummaries.sort((a, b) {
       final aTime = monthlyBox.get(a['month'])['timestamp'];
       final bTime = monthlyBox.get(b['month'])['timestamp'];
       return bTime.compareTo(aTime);
     });
+  }
+
+  Map<String, dynamic> getCurrentMonthSummary() {
+    final now = DateTime(2025, 9, 1);
+
+    // final now = DateTime.now();
+    final currentMonthYear = DateFormat('MMM yyyy').format(now);
+
+    final totalIncome = double.tryParse(getIncome()) ?? 0;
+    final totalExpense = getTotalExpense();
+    final lastMonthSaving = incomeBox.get('lastMonthSaving') ?? 0.0;
+    final actualIncome = totalIncome - lastMonthSaving;
+    final savings = totalIncome - totalExpense;
+
+    return {
+      'month': currentMonthYear,
+      'totalIncome': totalIncome,
+      'actualIncome': actualIncome,
+      'lastMonthSaving': lastMonthSaving,
+      'totalExpense': totalExpense,
+      'savings': savings,
+      'expenses': List<Map<String, dynamic>>.from(expenseList),
+    };
   }
 
   Future<void> _checkYearEnd() async {
@@ -179,8 +200,6 @@ class ExpenseService {
     yearlyData
         .sort((a, b) => (b['year'] as String).compareTo(a['year'] as String));
   }
-
-// 5. Get data for specific year
 
   Map<String, dynamic>? getYearlyData(String year) {
     final data = yearlyBox.get(year);
